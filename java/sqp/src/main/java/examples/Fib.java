@@ -72,6 +72,9 @@ public class Fib extends Task {
             number = f1.number + f2.number;
         }
         
+        if (fibArray[n] == 0) {
+            fibArray[n] = number;
+        }
     }
 
     static int sequentialThreshold = 0;
@@ -87,6 +90,8 @@ public class Fib extends Task {
             throw new Error("Not yet computed");
         return number;
     }
+    
+    static volatile int fibArray[];
     
     public static void main (String[] args) {
         
@@ -108,6 +113,8 @@ public class Fib extends Task {
         // initialize thread pool
         TaskRunnerGroup g = new TaskRunnerGroup(procs);
         
+        fibArray = new int[num+1];
+        
         // create first task
         Fib f = new Fib(num);
         
@@ -120,6 +127,8 @@ public class Fib extends Task {
         // show result
         long result;
         {result = f.getAnswer();}
-        System.out.println("Fib: Size: " + num + " Answer: " + result);
+        for (int i = 0; i < fibArray.length; ++i) {
+            System.out.format("Fibonacci(%d) = %d\n", i, fibArray[i]);
+        }
     }
 }
