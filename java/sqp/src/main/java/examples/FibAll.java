@@ -40,15 +40,15 @@ public class FibAll {
         
     private static class Fib extends Task {
 
-        volatile int number; // number holds value to compute initially, after computation is replaced by answer
+        volatile long number; // number holds value to compute initially, after computation is replaced by answer
     
-        public Fib(int n) {
+        public Fib(long n) {
             number = n;
         }
     
         @Override
         public void run() {
-            int n = number;
+            long n = number;
         
             if (n <= 1) {
                 // do nothing; fib(0) = 0; fib(1) = 1
@@ -74,25 +74,25 @@ public class FibAll {
                 number = f1.number + f2.number;
             }
         
-            if (fibArray[n] == 0) {
-                fibArray[n] = number;
+            if (fibArray[(int) n] == 0) {
+                fibArray[(int) n] = number;
             }
         }
     
-        static int seqFib (int n) {
+        static long seqFib (long n) {
             if (n <= 1) return n;
             else
                 return seqFib(n-1) + seqFib(n-2);
         }
     
-        int getAnswer () {
+        long getAnswer () {
             if (!isDone())
                 throw new Error("Not yet computed");
             return number;
         }
     }
 
-    static volatile int fibArray[];
+    static volatile long fibArray[];
     static int sequentialThreshold = 0;
     
     public static void main (String[] args) {
@@ -115,7 +115,7 @@ public class FibAll {
         // initialize thread pool
         TaskRunnerGroup g = new TaskRunnerGroup(procs);
         
-        fibArray = new int[num+1];
+        fibArray = new long[num+1];
         
         // create first task
         Fib f = new Fib(num);

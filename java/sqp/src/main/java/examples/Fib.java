@@ -38,15 +38,15 @@ import edu.udel.sqp.TaskRunnerGroup;
  */
 public class Fib extends Task {
 
-    volatile int number; // number holds value to compute initially, after computation is replaced by answer
+    volatile long number; // number holds value to compute initially, after computation is replaced by answer
     
-    public Fib(int n) {
+    public Fib(long n) {
         number = n;
     }
     
     @Override
     public void run() {
-        int n = number;
+        long n = number;
         
         if (n <= 1) {
             // do nothing; fib(0) = 0; fib(1) = 1
@@ -75,13 +75,13 @@ public class Fib extends Task {
 
     static int sequentialThreshold = 0;
     
-    static int seqFib (int n) {
+    static long seqFib (long n) {
         if (n <= 1) return n;
         else
             return seqFib(n-1) + seqFib(n-2);
     }
     
-    int getAnswer () {
+    long getAnswer () {
         if (!isDone())
             throw new Error("Not yet computed");
         return number;
