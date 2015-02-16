@@ -36,56 +36,64 @@ import edu.udel.sqp.TaskRunnerGroup;
  * 
  * Based on code presented in "Patterns for Parallel programming by Mattson et al"
  */
-public class Fib extends Task {
+public class FibAll {
+        
+    private static class Fib extends Task {
 
-    volatile int number; // number holds value to compute initially, after computation is replaced by answer
+        volatile int number; // number holds value to compute initially, after computation is replaced by answer
     
-    public Fib(int n) {
-        number = n;
+        public Fib(int n) {
+            number = n;
+        }
+    
+        @Override
+        public void run() {
+            int n = number;
+        
+            if (n <= 1) {
+                // do nothing; fib(0) = 0; fib(1) = 1
+            } else if (n <= sequentialThreshold) {
+                number = seqFib(n);
+            }
+        
+            // otherwise use recursive parallel decomposition
+            else {
+                // Construct subtasks:
+                Fib f1 = new Fib(n - 1);
+                Fib f2 = new Fib(n - 2);
+            
+                // run them in parallel
+                f1.fork(); //System.out.println("forking f1 : " + (n-1));
+                f2.fork(); //System.out.println("forking f2 : " + (n-2));
+            
+                // await completion
+                f1.join(); //System.out.println("joining f1 : " + (n-1));
+                f2.join(); //System.out.println("joining f2 : " + (n-2));
+            
+                // combine results
+                number = f1.number + f2.number;
+            }
+        
+            if (fibArray[n] == 0) {
+                fibArray[n] = number;
+            }
+        }
+    
+        static int seqFib (int n) {
+            if (n <= 1) return n;
+            else
+                return seqFib(n-1) + seqFib(n-2);
+        }
+    
+        int getAnswer () {
+            if (!isDone())
+                throw new Error("Not yet computed");
+            return number;
+        }
     }
-    
-    @Override
-    public void run() {
-        int n = number;
-        
-        if (n <= 1) {
-            // do nothing; fib(0) = 0; fib(1) = 1
-        } else if (n <= sequentialThreshold) {
-            number = seqFib(n);
-        }
-        
-        // otherwise use recursive parallel decomposition
-        else {
-            // Construct subtasks:
-            Fib f1 = new Fib(n - 1);
-            Fib f2 = new Fib(n - 2);
-            
-            // run them in parallel
-            f1.fork(); //System.out.println("forking f1 : " + (n-1));
-            f2.fork(); //System.out.println("forking f2 : " + (n-2));
-            
-            // await completion
-            f1.join(); //System.out.println("joining f1 : " + (n-1));
-            f2.join(); //System.out.println("joining f2 : " + (n-2));
-            
-            // combine results
-            number = f1.number + f2.number;
-        }
-   }
 
+    static volatile int fibArray[];
     static int sequentialThreshold = 0;
-    
-    static int seqFib (int n) {
-        if (n <= 1) return n;
-        else
-            return seqFib(n-1) + seqFib(n-2);
-    }
-    
-    int getAnswer () {
-        if (!isDone())
-            throw new Error("Not yet computed");
-        return number;
-    }
     
     public static void main (String[] args) {
         
@@ -107,6 +115,8 @@ public class Fib extends Task {
         // initialize thread pool
         TaskRunnerGroup g = new TaskRunnerGroup(procs);
         
+        fibArray = new int[num+1];
+        
         // create first task
         Fib f = new Fib(num);
         
@@ -119,6 +129,8 @@ public class Fib extends Task {
         // show result
         long result;
         {result = f.getAnswer();}
-        System.out.format("Fibonacci(%d) = %d\n", num, result);
+        for (int i = 0; i < fibArray.length; ++i) {
+            System.out.format("Fibonacci(%d) = %d\n", i, fibArray[i]);
+        }
     }
 }
