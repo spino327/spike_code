@@ -49,12 +49,10 @@ long fib(int n) {
     if ( n == 0 || n == 1 ) return(n);
 
     // In case the sequence gets too short, execute the serial version
-    if ( n < SEQ_THRESHOLD )
-    {
+    if ( n < SEQ_THRESHOLD ) {
         return(fib(n-1)+fib(n-2));
     }
-    else
-    {
+    else {
 #pragma omp task shared(fnm1)
         fnm1 = fib(n-1);
 #pragma omp task shared(fnm2)

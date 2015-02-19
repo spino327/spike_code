@@ -1,7 +1,7 @@
 CC=g++-4.9
 CFLAGS=-c -Wall -fopenmp
 LDFLAGS=-fopenmp
-SOURCES=fib_openmp.cpp
+SOURCES=fib_openmp.cpp fib.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(SOURCES:.cpp=)
 NUM=40
@@ -12,7 +12,7 @@ NUM=40
 all: $(SOURCES) $(EXECUTABLE)
 	
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(LDFLAGS) $(@).o -o $@
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
