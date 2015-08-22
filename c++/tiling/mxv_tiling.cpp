@@ -6,8 +6,8 @@
 #ifndef N
 #define N 1024
 #endif
-#ifndef TAIL
-#define TAIL 4
+#ifndef TILE
+#define TILE 4
 #endif
 
 void naive (int** a, int* b, int* c) {
@@ -26,10 +26,10 @@ int min (int a, int b) {
 
 void tailing (int** a, int* b, int* c) {
     
-    for (int i = 0; i < N; i += TAIL) {
-        for (int j = 0; j < N; j += TAIL)
-            for (int x = i; x < std::min(i + TAIL, N); ++x)
-                for (int y = j; y < std::min(j + TAIL, N); ++y)
+    for (int i = 0; i < N; i += TILE) {
+        for (int j = 0; j < N; j += TILE)
+            for (int x = i; x < std::min(i + TILE, N); ++x)
+                for (int y = j; y < std::min(j + TILE, N); ++y)
                     c[x] = c[x] + a[x][y] * b[y];
         
     }
@@ -38,7 +38,7 @@ void tailing (int** a, int* b, int* c) {
 
 int main (int argc, char** argv) {
 
-    std::cout << "Working with tail = " << TAIL << ", N = "
+    std::cout << "Working with tail = " << TILE << ", N = "
         << N << "\n";
 
     int** a;
