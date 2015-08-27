@@ -24,7 +24,7 @@ int min (int a, int b) {
     return b;
 }
 
-void tailing (int** a, int* b, int* c) {
+void tiling (int** a, int* b, int* c) {
     
     for (int i = 0; i < N; i += TILE) {
         for (int j = 0; j < N; j += TILE)
@@ -35,10 +35,9 @@ void tailing (int** a, int* b, int* c) {
     }
 }
 
-
 int main (int argc, char** argv) {
 
-    std::cout << "Working with tail = " << TILE << ", N = "
+    std::cout << "Working with tile = " << TILE << ", N = "
         << N << "\n";
 
     int** a;
@@ -67,9 +66,9 @@ int main (int argc, char** argv) {
     }
 
     start = std::chrono::system_clock::now();
-    tailing (a, b, c);
+    tiling (a, b, c);
     end = std::chrono::system_clock::now();
-    std::cout << "Tailing elapse time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms\n";
+    std::cout << "Tiling elapse time : " << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms\n";
 
     return 0;
 }
